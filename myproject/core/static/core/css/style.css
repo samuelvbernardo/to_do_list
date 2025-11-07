@@ -1,150 +1,341 @@
-/* core/static/core/css/style.css */
+/* ===========================
+   TaskManager - Estilos Personalizados
+   Sistema de Gestão de Tarefas e Projetos
+   =========================== */
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+/* Reset e Configurações Gerais */
+* {
     margin: 0;
-    padding: 0 20px;
-    line-height: 1.5;
+    padding: 0;
     box-sizing: border-box;
 }
 
-h1, h2 {
-    color: #2c3e50;
-    margin-top: 0;
-    margin-bottom: 15px;
-}
-
-h1 {
-    margin-top: 20px;
-    text-align: center;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
 }
 
 main {
-    max-width: 700px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 20px 30px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 6px;
-    box-sizing: border-box;
+    flex: 1;
+    padding-bottom: 2rem;
 }
 
-footer {
-    text-align: center;
-    padding: 15px 0;
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #777;
-    border-top: 1px solid #ddd;
-}
-
-/* Links */
-a {
-    color: #2980b9;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Aplicar margem apenas em links dentro da lista e filtros */
-ul li a,
-.filtros a {
-    margin-left: 10px;
-    font-size: 0.9em;
-    cursor: pointer;
-}
-
-.filtros a {
-    margin: 0 8px;
+/* Navbar Customizada */
+.navbar-brand {
     font-weight: bold;
+    font-size: 1.5rem;
 }
 
-.filtros a:hover {
-    color: #1c5980;
+.navbar-nav .nav-link {
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
 }
 
-.filtros a.ativo {
-    color: #1c5980;
-    font-weight: bold;
-    text-decoration: underline;
+.navbar-nav .nav-link:hover {
+    transform: translateY(-2px);
 }
 
-/* Form */
-form {
-    margin-top: 15px;
+.navbar-nav .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
 }
 
-form button {
-    background-color: #2980b9;
-    color: white;
+/* Cards */
+.card {
     border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    font-weight: 600;
+}
+
+/* Badges Customizados */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}
+
+/* Botões */
+.btn {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-group .btn {
+    margin-right: 0.25rem;
+}
+
+/* Formulários */
+form p {
+    margin-bottom: 1rem;
+}
+
+form p label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+form p input[type="text"],
+form p input[type="email"],
+form p input[type="password"],
+form p input[type="date"],
+form p input[type="number"],
+form p input[type="color"],
+form p textarea,
+form p select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form p input:focus,
+form p textarea:focus,
+form p select:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+form p select[multiple] {
+    min-height: 150px;
+}
+
+form ul.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+form .helptext {
+    display: block;
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Tabelas */
+.table {
+    background-color: white;
+}
+
+.table thead {
+    background-color: #f8f9fa;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
     cursor: pointer;
-    font-size: 1em;
+}
+
+.table-responsive {
+    border-radius: 5px;
+}
+
+/* Progress Bars */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #0d6efd 0%, #0056b3 100%);
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Paginação */
+.pagination {
+    margin-top: 2rem;
+}
+
+.pagination .page-link {
+    color: #0d6efd;
+    border-radius: 5px;
+    margin: 0 0.25rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.75rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card,
+.alert {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Login/Registro */
+.card.shadow-lg {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Dashboard Stats Cards */
+.display-4 {
+    opacity: 0.2;
+}
+
+/* Badges de Prioridade */
+.badge.bg-baixa {
+    background-color: #6c757d !important;
+}
+
+.badge.bg-media {
+    background-color: #17a2b8 !important;
+}
+
+.badge.bg-alta {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.badge.bg-urgente {
+    background-color: #dc3545 !important;
+}
+
+/* Linha da tabela atrasada */
+.table-danger {
+    background-color: #f8d7da !important;
+}
+
+/* Lista de grupos */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
     transition: background-color 0.3s ease;
 }
 
-form button:hover {
-    background-color: #1c5980;
+.list-group-item:last-child {
+    border-bottom: none;
 }
 
-/* Lista de tarefas */
-ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
+.list-group-item-action:hover {
+    background-color: #f8f9fa;
 }
 
-ul li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Dropdown do usuário */
+.dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
-ul li.concluida {
-    text-decoration: line-through;
-    color: #999;
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.3s ease;
 }
 
-/* Inputs do formulário */
-input[type="text"],
-input[type="date"],
-select,
-textarea {
-    width: 100%;
-    padding: 8px 10px;
-    margin: 6px 0 12px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 1em;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+.dropdown-item:hover {
+    background-color: #f8f9fa;
 }
 
-input[type="text"]:focus,
-input[type="date"]:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: #2980b9;
-    box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+/* Utilitários */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 80px;
+.shadow {
+    box-shadow: 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.data-status {
-    font-style: italic;
-    color: #555;
-    margin-left: 8px;
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .footer,
+    .btn,
+    .alert {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
 }
 

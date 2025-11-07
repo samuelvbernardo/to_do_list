@@ -1,0 +1,126 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Detalhes do Projeto - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="bi bi-folder"></i> {{ projeto.nome }}</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'projeto_update' projeto.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a href="{% url 'projeto_delete' projeto.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Excluir
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Descrição</h5>
+                    <p>{{ projeto.descricao|default:"Sem descrição disponível." }}</p>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{% if projeto.status == 'CONCLUIDO' %}success{% elif projeto.status == 'EM_ANDAMENTO' %}primary{% else %}secondary{% endif %}">
+                                    {{ projeto.get_status_display }}
+                                </span>
+                            </p>
+                            <p><strong>Responsável:</strong> {{ projeto.responsavel.get_full_name|default:projeto.responsavel.username }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Data de Início:</strong> {{ projeto.data_inicio|date:"d/m/Y" }}</p>
+                            {% if projeto.data_fim %}
+                            <p><strong>Data de Término:</strong> {{ projeto.data_fim|date:"d/m/Y" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <strong>Progresso: {{ projeto.progresso }}%</strong>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ projeto.progresso }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-list-check"></i> Tarefas do Projeto</h5>
+                    <a href="{% url 'tarefa_create' %}?projeto={{ projeto.pk }}" class="btn btn-sm btn-success">
+                        <i class="bi bi-plus"></i> Nova Tarefa
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if tarefas %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Status</th>
+                                    <th>Prioridade</th>
+                                    <th>Responsável</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tarefa in tarefas %}
+                                <tr>
+                                    <td>{{ tarefa.titulo }}</td>
+                                    <td><span class="badge bg-secondary">{{ tarefa.get_status_display }}</span></td>
+                                    <td><span class="badge bg-{% if tarefa.prioridade == 'URGENTE' %}danger{% elif tarefa.prioridade == 'ALTA' %}warning{% else %}info{% endif %}">
+                                        {{ tarefa.get_prioridade_display }}
+                                    </span></td>
+                                    <td>{{ tarefa.responsavel.username|default:"N/A" }}</td>
+                                    <td>
+                                        <a href="{% url 'tarefa_detail' tarefa.pk %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Nenhuma tarefa cadastrada para este projeto.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-people"></i> Equipe</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Responsável</h6>
+                    <p><i class="bi bi-person-circle"></i> {{ projeto.responsavel.get_full_name|default:projeto.responsavel.username }}</p>
+                    
+                    <h6>Membros</h6>
+                    {% if projeto.membros.all %}
+                    <ul class="list-unstyled">
+                        {% for membro in projeto.membros.all %}
+                        <li><i class="bi bi-person"></i> {{ membro.get_full_name|default:membro.username }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">Nenhum membro adicionado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

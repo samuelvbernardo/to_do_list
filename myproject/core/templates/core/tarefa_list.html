@@ -1,0 +1,147 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Tarefas - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1><i class="bi bi-list-check"></i> Tarefas</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'tarefa_create' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nova Tarefa
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="busca" class="form-control" placeholder="Buscar..." 
+                           value="{{ request.GET.busca }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">Todos os Status</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="prioridade" class="form-select">
+                        <option value="">Todas Prioridades</option>
+                        {% for value, label in prioridade_choices %}
+                            <option value="{{ value }}" {% if request.GET.prioridade == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="projeto" class="form-select">
+                        <option value="">Todos os Projetos</option>
+                        {% for projeto in projetos %}
+                            <option value="{{ projeto.pk }}" {% if request.GET.projeto == projeto.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ projeto.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Lista de Tarefas -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Projeto</th>
+                            <th>Status</th>
+                            <th>Prioridade</th>
+                            <th>Responsável</th>
+                            <th>Data Limite</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarefa in tarefas %}
+                        <tr class="{% if tarefa.atrasada %}table-danger{% endif %}">
+                            <td>
+                                <strong>{{ tarefa.titulo }}</strong>
+                                {% if tarefa.atrasada %}<i class="bi bi-exclamation-triangle text-danger"></i>{% endif %}
+                            </td>
+                            <td>{{ tarefa.projeto.nome }}</td>
+                            <td>
+                                <span class="badge bg-{% if tarefa.status == 'CONCLUIDA' %}success{% elif tarefa.status == 'EM_ANDAMENTO' %}primary{% else %}secondary{% endif %}">
+                                    {{ tarefa.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if tarefa.prioridade == 'URGENTE' %}danger{% elif tarefa.prioridade == 'ALTA' %}warning{% elif tarefa.prioridade == 'MEDIA' %}info{% else %}secondary{% endif %}">
+                                    {{ tarefa.get_prioridade_display }}
+                                </span>
+                            </td>
+                            <td>{{ tarefa.responsavel.username|default:"N/A" }}</td>
+                            <td>{{ tarefa.data_limite|date:"d/m/Y"|default:"Sem prazo" }}</td>
+                            <td>
+                                <a href="{% url 'tarefa_detail' tarefa.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'tarefa_update' tarefa.pk %}" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'tarefa_delete' tarefa.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Nenhuma tarefa encontrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paginação -->
+    {% if is_paginated %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+            {% endif %}
+            
+            <li class="page-item active">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

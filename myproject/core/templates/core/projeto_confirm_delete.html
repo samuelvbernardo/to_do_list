@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Excluir Projeto - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow mt-5">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar Exclusão</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Tem certeza que deseja excluir o projeto:</p>
+                    <h5 class="text-center my-4">"{{ object.nome }}"?</h5>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-info-circle"></i> Esta ação não pode ser desfeita!
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger flex-fill">
+                                <i class="bi bi-trash"></i> Sim, Excluir
+                            </button>
+                            <a href="{% url 'projeto_detail' object.pk %}" class="btn btn-secondary flex-fill">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

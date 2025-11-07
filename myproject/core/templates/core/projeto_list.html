@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Projetos - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1><i class="bi bi-folder"></i> Projetos</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'projeto_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Novo Projeto
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="busca" class="form-control" placeholder="Buscar..." 
+                           value="{{ request.GET.busca }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">Todos os Status</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="ordem" class="form-select">
+                        <option value="-data_criacao">Mais Recentes</option>
+                        <option value="data_criacao" {% if request.GET.ordem == 'data_criacao' %}selected{% endif %}>
+                            Mais Antigos
+                        </option>
+                        <option value="nome" {% if request.GET.ordem == 'nome' %}selected{% endif %}>
+                            Nome (A-Z)
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Lista de Projetos -->
+    <div class="row">
+        {% for projeto in projetos %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">{{ projeto.nome }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ projeto.descricao|truncatewords:20|default:"Sem descrição" }}</p>
+                    
+                    <div class="mb-2">
+                        <strong>Status:</strong>
+                        <span class="badge bg-{% if projeto.status == 'CONCLUIDO' %}success{% elif projeto.status == 'EM_ANDAMENTO' %}primary{% else %}secondary{% endif %}">
+                            {{ projeto.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <strong>Responsável:</strong> {{ projeto.responsavel.get_full_name|default:projeto.responsavel.username }}
+                    </div>
+                    
+                    <div class="mb-2">
+                        <strong>Progresso:</strong>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ projeto.progresso }}%">
+                                {{ projeto.progresso }}%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> {{ projeto.data_inicio|date:"d/m/Y" }}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'projeto_detail' projeto.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i> Ver
+                    </a>
+                    <a href="{% url 'projeto_update' projeto.pk %}" class="btn btn-sm btn-outline-warning">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a href="{% url 'projeto_delete' projeto.pk %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i> Excluir
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Nenhum projeto encontrado.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginação -->
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">Primeira</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+            {% endif %}
+            
+            <li class="page-item active">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

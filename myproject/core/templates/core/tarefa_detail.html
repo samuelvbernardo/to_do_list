@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ tarefa.titulo }} - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="bi bi-list-check"></i> {{ tarefa.titulo }}</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'tarefa_update' tarefa.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a href="{% url 'tarefa_delete' tarefa.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Excluir
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Descrição</h5>
+                    <p>{{ tarefa.descricao|default:"Sem descrição disponível." }}</p>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Projeto:</strong> <a href="{% url 'projeto_detail' tarefa.projeto.pk %}">{{ tarefa.projeto.nome }}</a></p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{% if tarefa.status == 'CONCLUIDA' %}success{% elif tarefa.status == 'EM_ANDAMENTO' %}primary{% else %}secondary{% endif %}">
+                                    {{ tarefa.get_status_display }}
+                                </span>
+                            </p>
+                            <p><strong>Prioridade:</strong> 
+                                <span class="badge bg-{% if tarefa.prioridade == 'URGENTE' %}danger{% elif tarefa.prioridade == 'ALTA' %}warning{% else %}info{% endif %}">
+                                    {{ tarefa.get_prioridade_display }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Responsável:</strong> {{ tarefa.responsavel.get_full_name|default:tarefa.responsavel.username|default:"Não atribuído" }}</p>
+                            <p><strong>Data Limite:</strong> {{ tarefa.data_limite|date:"d/m/Y"|default:"Sem prazo" }}</p>
+                            {% if tarefa.atrasada %}
+                            <p class="text-danger"><i class="bi bi-exclamation-triangle"></i> <strong>Tarefa Atrasada!</strong></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if tarefa.categorias.all %}
+                    <div class="mt-3">
+                        <strong>Categorias:</strong>
+                        {% for categoria in tarefa.categorias.all %}
+                        <span class="badge" style="background-color: {{ categoria.cor }}">{{ categoria.nome }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if tarefa.estimativa_horas or tarefa.horas_trabalhadas %}
+                    <div class="mt-3">
+                        <p><strong>Estimativa:</strong> {{ tarefa.estimativa_horas|default:"N/A" }} horas</p>
+                        <p><strong>Horas Trabalhadas:</strong> {{ tarefa.horas_trabalhadas }} horas</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informações</h5>
+                </div>
+                <div class="card-body">
+                    <p><small class="text-muted">Criado em:</small><br>{{ tarefa.data_criacao|date:"d/m/Y H:i" }}</p>
+                    <p><small class="text-muted">Última atualização:</small><br>{{ tarefa.data_atualizacao|date:"d/m/Y H:i" }}</p>
+                    {% if tarefa.data_conclusao %}
+                    <p><small class="text-muted">Concluído em:</small><br>{{ tarefa.data_conclusao|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

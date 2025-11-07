@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Categorias - TaskManager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1><i class="bi bi-tags"></i> Categorias</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'categoria_create' %}" class="btn btn-info">
+                <i class="bi bi-plus-circle"></i> Nova Categoria
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for categoria in categorias %}
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span class="badge" style="background-color: {{ categoria.cor }}">{{ categoria.nome }}</span>
+                    </h5>
+                    <p class="card-text">{{ categoria.descricao|default:"Sem descrição" }}</p>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'categoria_update' categoria.pk %}" class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="{% url 'categoria_delete' categoria.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> Excluir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Nenhuma categoria cadastrada.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
